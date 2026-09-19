@@ -1,8 +1,18 @@
 {
-  "name": "adbc",
+  "name": "@tooldroid/adbc",
   "version": "2.0.0",
   "description": "Automatically connect Android devices over ADB TCP/IP.",
   "license": "MIT",
+  "files": [
+    "dist/adb.js",
+    "dist/command.js",
+    "dist/index.js",
+    "dist/network.js",
+    "dist/types.js",
+    "dist/ui.js",
+    "LICENSE",
+    "README.md"
+  ],
   "type": "module",
   "bin": {
     "adbc": "dist/index.js"

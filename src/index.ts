@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 
 import {
-    connectTcpIp,
-    ensureAdb,
-    getConnectedDevices,
-    switchToTcpIp,
+  connectTcpIp,
+  ensureAdb,
+  getConnectedDevices,
+  switchToTcpIp,
 } from './adb.js';
 import { getDefaultGateway } from './network.js';
 import { chooseDevice, error, info, label, success, warning } from './ui.js';
