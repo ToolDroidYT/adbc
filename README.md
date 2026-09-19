@@ -6,6 +6,7 @@ Automatically connect Android devices over ADB TCP/IP.
 
 - Node.js >= 22
 - `adb` (Android platform-tools) in your PATH
+- A supported OS for gateway detection (see below)
 
 ## Installation
 
@@ -35,6 +36,14 @@ The tool will:
 4. If multiple devices are connected, prompt you to select one
 5. Switch the selected device to TCP/IP mode on port 5555
 6. Connect to the device wirelessly via `adb connect <gateway>:5555`
+
+## Platform Support
+
+| Platform | Gateway detection command |
+| -------- | ------------------------- |
+| Linux    | `ip route show default`   |
+| macOS    | `netstat -nr`             |
+| Windows  | `ipconfig`                |
 
 ## Development
 
