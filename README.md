@@ -49,8 +49,3 @@ npm run lint:fix   # Auto-fix lint errors
 npm run format     # Format code with Prettier
 npm run typecheck  # Type-check without emitting
 ```
-
-## Legacy
-
-The original bash script `adbc.sh` is included as a wrapper that launches the
-compiled Node.js program.
