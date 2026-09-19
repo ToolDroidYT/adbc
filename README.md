@@ -39,11 +39,12 @@ The tool will:
 
 ## Platform Support
 
-| Platform | Gateway detection command |
-| -------- | ------------------------- |
-| Linux    | `ip route show default`   |
-| macOS    | `netstat -nr`             |
-| Windows  | `ipconfig`                |
+| Platform         | Gateway detection command |
+| ---------------- | ------------------------- |
+| Linux            | `ip route show default`   |
+| Android (Termux) | `ip route show default`   |
+| macOS            | `netstat -nr`             |
+| Windows          | `ipconfig`                |
 
 ## Development
 

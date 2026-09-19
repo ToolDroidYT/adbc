@@ -92,6 +92,35 @@ describe('getDefaultGateway', () => {
     });
   });
 
+  describe('android (Termux)', () => {
+    beforeEach(() => {
+      mockPlatform.mockReturnValue('android');
+    });
+
+    it('parses gateway from ip route output', async () => {
+      mockRunCommand.mockResolvedValue({
+        stdout: 'default via 192.168.1.1 dev wlan0 proto dhcp\n',
+        stderr: '',
+        exitCode: 0,
+      });
+
+      const gateway = await getDefaultGateway();
+      expect(gateway).toBe('192.168.1.1');
+    });
+
+    it('throws when no default route exists', async () => {
+      mockRunCommand.mockResolvedValue({
+        stdout: '',
+        stderr: '',
+        exitCode: 0,
+      });
+
+      await expect(getDefaultGateway()).rejects.toThrow(
+        'No default gateway found',
+      );
+    });
+  });
+
   describe('macOS', () => {
     beforeEach(() => {
       mockPlatform.mockReturnValue('darwin');

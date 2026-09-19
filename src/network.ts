@@ -6,6 +6,7 @@ export async function getDefaultGateway(): Promise<string> {
 
   switch (os) {
     case 'linux':
+    case 'android':
       return getLinuxGateway();
     case 'darwin':
       return getMacOsGateway();
