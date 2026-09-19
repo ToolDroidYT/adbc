@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 
 import {
-  connectTcpIp,
-  ensureAdb,
-  getConnectedDevices,
-  switchToTcpIp,
+    connectTcpIp,
+    ensureAdb,
+    getConnectedDevices,
+    switchToTcpIp,
 } from './adb.js';
 import { getDefaultGateway } from './network.js';
 import { chooseDevice, error, info, label, success, warning } from './ui.js';
@@ -13,7 +13,7 @@ const ADB_PORT = 5555;
 
 async function main(): Promise<void> {
   console.log();
-  info('ADBC — ADB over TCP/IP');
+  info('ADBC - ADB over TCP/IP');
   console.log();
 
   await ensureAdb();
