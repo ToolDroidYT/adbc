@@ -2,6 +2,14 @@
   "name": "@tooldroid/adbc",
   "version": "2.0.0",
   "description": "Automatically connect Android devices over ADB TCP/IP.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ToolDroidYT/adbc.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ToolDroidYT/adbc/issues"
+  },
+  "homepage": "https://github.com/ToolDroidYT/adbc#readme",
   "license": "MIT",
   "files": [
     "dist/adb.js",
@@ -27,7 +35,10 @@
     "format:check": "prettier --check src/",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "prepublishOnly": "npm run typecheck && npm run lint && npm run test && npm run build",
+    "publish:dry": "npm run build && npm pack --dry-run",
+    "release": "npm run prepublishOnly && npm publish"
   },
   "engines": {
     "node": ">=22"
