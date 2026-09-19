@@ -1,4 +1,4 @@
-# ADBC
+# ADBC (Android Debug Bridge Connect)
 
 Automatically connect Android devices over ADB TCP/IP.
 
@@ -49,3 +49,7 @@ npm run lint:fix   # Auto-fix lint errors
 npm run format     # Format code with Prettier
 npm run typecheck  # Type-check without emitting
 ```
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
