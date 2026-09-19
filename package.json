@@ -38,7 +38,7 @@
     "test:watch": "vitest",
     "prepublishOnly": "npm run typecheck && npm run lint && npm run test && npm run build",
     "publish:dry": "npm run build && npm pack --dry-run",
-    "release": "npm run prepublishOnly && npm publish"
+    "release": "npm run prepublishOnly && npm publish --access=public"
   },
   "engines": {
     "node": ">=22"
