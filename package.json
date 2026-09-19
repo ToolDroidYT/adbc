@@ -1,6 +1,6 @@
 {
   "name": "@tooldroid/adbc",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Automatically connect Android devices over ADB TCP/IP.",
   "repository": {
     "type": "git",
