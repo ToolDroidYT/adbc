@@ -2,6 +2,7 @@
   "name": "adbc",
   "version": "2.0.0",
   "description": "Automatically connect Android devices over ADB TCP/IP.",
+  "license": "MIT",
   "type": "module",
   "bin": {
     "adbc": "dist/index.js"
