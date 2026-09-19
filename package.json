@@ -1,0 +1,26 @@
+{
+  "name": "adbc",
+  "version": "2.0.0",
+  "description": "Automatically connect Android devices over ADB TCP/IP.",
+  "type": "module",
+  "bin": {
+    "adbc": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/index.ts",
+    "start": "node dist/index.js"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "@inquirer/prompts": "^7.8.0",
+    "chalk": "^5.6.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.18.6",
+    "tsx": "^4.20.5",
+    "typescript": "^5.9.2"
+  }
+}
