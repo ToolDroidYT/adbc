@@ -11,3 +11,7 @@ export interface CommandResult {
   stderr: string;
   exitCode: number;
 }
+
+export interface RunCommandOptions {
+  timeout?: number;
+}

@@ -29,7 +29,7 @@ export async function getConnectedDevices(): Promise<AdbDevice[]> {
     .filter((device) => device.state === "device");
 }
 
-function parseDevice(line: string): AdbDevice | null {
+export function parseDevice(line: string): AdbDevice | null {
   const parts = line.split(/\s+/);
 
   if (parts.length < 2) return null;
@@ -74,7 +74,10 @@ export async function switchToTcpIp(
   }
 }
 
-export async function connectTcpIp(host: string, port: number): Promise<string> {
+export async function connectTcpIp(
+  host: string,
+  port: number,
+): Promise<string> {
   const target = `${host}:${port}`;
   const result = await runCommand("adb", ["connect", target]);
 

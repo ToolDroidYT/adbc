@@ -4,7 +4,9 @@ export async function getDefaultGateway(): Promise<string> {
   const result = await runCommand("ip", ["route", "show", "default"]);
 
   if (result.exitCode !== 0) {
-    throw new Error(result.stderr.trim() || "Failed to determine the default gateway.");
+    throw new Error(
+      result.stderr.trim() || "Failed to determine the default gateway.",
+    );
   }
 
   for (const line of result.stdout.split(/\r?\n/)) {

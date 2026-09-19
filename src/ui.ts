@@ -35,7 +35,7 @@ export async function chooseDevice(devices: AdbDevice[]): Promise<AdbDevice> {
   });
 }
 
-function formatDevice(device: AdbDevice): string {
+export function formatDevice(device: AdbDevice): string {
   const name = device.model ?? device.product ?? "Unknown device";
   return `${name} ${chalk.dim(`(${device.serial})`)}`;
 }
