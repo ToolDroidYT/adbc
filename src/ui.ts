@@ -1,6 +1,6 @@
-import chalk from "chalk";
-import { select } from "@inquirer/prompts";
-import type { AdbDevice } from "./types.js";
+import chalk from 'chalk';
+import { select } from '@inquirer/prompts';
+import type { AdbDevice } from './types.js';
 
 export function info(message: string): void {
   console.log(chalk.cyan(message));
@@ -26,7 +26,7 @@ export async function chooseDevice(devices: AdbDevice[]): Promise<AdbDevice> {
   if (devices.length === 1) return devices[0]!;
 
   return select({
-    message: "Select a device",
+    message: 'Select a device',
     choices: devices.map((device) => ({
       name: formatDevice(device),
       value: device,
@@ -36,6 +36,6 @@ export async function chooseDevice(devices: AdbDevice[]): Promise<AdbDevice> {
 }
 
 export function formatDevice(device: AdbDevice): string {
-  const name = device.model ?? device.product ?? "Unknown device";
+  const name = device.model ?? device.product ?? 'Unknown device';
   return `${name} ${chalk.dim(`(${device.serial})`)}`;
 }

@@ -5,22 +5,15 @@ import {
   ensureAdb,
   getConnectedDevices,
   switchToTcpIp,
-} from "./adb.js";
-import { getDefaultGateway } from "./network.js";
-import {
-  chooseDevice,
-  error,
-  info,
-  label,
-  success,
-  warning,
-} from "./ui.js";
+} from './adb.js';
+import { getDefaultGateway } from './network.js';
+import { chooseDevice, error, info, label, success, warning } from './ui.js';
 
 const ADB_PORT = 5555;
 
 async function main(): Promise<void> {
   console.log();
-  info("ADBC — ADB over TCP/IP");
+  info('ADBC — ADB over TCP/IP');
   console.log();
 
   await ensureAdb();
@@ -28,15 +21,15 @@ async function main(): Promise<void> {
   const devices = await getConnectedDevices();
 
   if (devices.length === 0) {
-    warning("No connected ADB devices found.");
-    console.log("Connect a device over USB with USB debugging enabled.");
+    warning('No connected ADB devices found.');
+    console.log('Connect a device over USB with USB debugging enabled.');
     return;
   }
 
   const gateway = await getDefaultGateway();
 
-  label("Connected devices:", String(devices.length));
-  label("Default gateway:", gateway);
+  label('Connected devices:', String(devices.length));
+  label('Default gateway:', gateway);
   console.log();
 
   const device = await chooseDevice(devices);

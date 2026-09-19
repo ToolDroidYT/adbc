@@ -1,21 +1,21 @@
-import { runCommand } from "./command.js";
-import type { AdbDevice } from "./types.js";
+import { runCommand } from './command.js';
+import type { AdbDevice } from './types.js';
 
 export async function ensureAdb(): Promise<void> {
-  const result = await runCommand("adb", ["version"]);
+  const result = await runCommand('adb', ['version']);
 
   if (result.exitCode !== 0) {
     throw new Error(
-      "ADB is unavailable. Install Android platform-tools (android-tools).",
+      'ADB is unavailable. Install Android platform-tools (android-tools).',
     );
   }
 }
 
 export async function getConnectedDevices(): Promise<AdbDevice[]> {
-  const result = await runCommand("adb", ["devices", "-l"]);
+  const result = await runCommand('adb', ['devices', '-l']);
 
   if (result.exitCode !== 0) {
-    throw new Error(result.stderr.trim() || "Failed to query ADB devices.");
+    throw new Error(result.stderr.trim() || 'Failed to query ADB devices.');
   }
 
   return result.stdout
@@ -23,10 +23,10 @@ export async function getConnectedDevices(): Promise<AdbDevice[]> {
     .slice(1)
     .map((line) => line.trim())
     .filter(Boolean)
-    .filter((line) => !line.startsWith("*"))
+    .filter((line) => !line.startsWith('*'))
     .map(parseDevice)
     .filter((device): device is AdbDevice => device !== null)
-    .filter((device) => device.state === "device");
+    .filter((device) => device.state === 'device');
 }
 
 export function parseDevice(line: string): AdbDevice | null {
@@ -40,15 +40,15 @@ export function parseDevice(line: string): AdbDevice | null {
   const device: AdbDevice = { serial, state };
 
   for (const attribute of attributes) {
-    const separator = attribute.indexOf(":");
+    const separator = attribute.indexOf(':');
     if (separator === -1) continue;
 
     const key = attribute.slice(0, separator);
     const value = attribute.slice(separator + 1);
 
-    if (key === "product") device.product = value;
-    if (key === "model") device.model = value.replaceAll("_", " ");
-    if (key === "transport_id") device.transportId = value;
+    if (key === 'product') device.product = value;
+    if (key === 'model') device.model = value.replaceAll('_', ' ');
+    if (key === 'transport_id') device.transportId = value;
   }
 
   return device;
@@ -58,10 +58,10 @@ export async function switchToTcpIp(
   device: AdbDevice,
   port: number,
 ): Promise<void> {
-  const result = await runCommand("adb", [
-    "-s",
+  const result = await runCommand('adb', [
+    '-s',
     device.serial,
-    "tcpip",
+    'tcpip',
     String(port),
   ]);
 
@@ -79,7 +79,7 @@ export async function connectTcpIp(
   port: number,
 ): Promise<string> {
   const target = `${host}:${port}`;
-  const result = await runCommand("adb", ["connect", target]);
+  const result = await runCommand('adb', ['connect', target]);
 
   if (result.exitCode !== 0) {
     throw new Error(

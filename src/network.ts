@@ -1,11 +1,11 @@
-import { runCommand } from "./command.js";
+import { runCommand } from './command.js';
 
 export async function getDefaultGateway(): Promise<string> {
-  const result = await runCommand("ip", ["route", "show", "default"]);
+  const result = await runCommand('ip', ['route', 'show', 'default']);
 
   if (result.exitCode !== 0) {
     throw new Error(
-      result.stderr.trim() || "Failed to determine the default gateway.",
+      result.stderr.trim() || 'Failed to determine the default gateway.',
     );
   }
 
@@ -17,5 +17,5 @@ export async function getDefaultGateway(): Promise<string> {
     }
   }
 
-  throw new Error("No default gateway found.");
+  throw new Error('No default gateway found.');
 }
