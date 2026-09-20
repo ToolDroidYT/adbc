@@ -4,7 +4,7 @@
 [![npm version](https://img.shields.io/npm/v/@tooldroid/adbc)](https://www.npmjs.com/package/@tooldroid/adbc)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-Wirelessly connect to Android devices over ADB TCP/IP — automatically detect your network gateway and switch USB-connected devices to Wi-Fi ADB.
+Wirelessly connect to Android devices over ADB TCP/IP - automatically detect your network gateway and switch USB-connected devices to Wi-Fi ADB.
 
 ## Requirements
 
@@ -14,11 +14,15 @@ Wirelessly connect to Android devices over ADB TCP/IP — automatically detect y
 
 ## Installation
 
-```bash
-# From npm
-npm install -g @tooldroid/adbc
+#### NPM
 
-# From source
+```bash
+npm install -g @tooldroid/adbc
+```
+
+#### From source
+
+```bash
 git clone https://github.com/ToolDroidYT/adbc.git
 cd adbc
 npm install
