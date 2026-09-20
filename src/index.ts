@@ -22,7 +22,19 @@ async function main(): Promise<void> {
 
   if (devices.length === 0) {
     warning('No connected ADB devices found.');
-    console.log('Connect a device over USB with USB debugging enabled.');
+
+    const gateway = await getDefaultGateway();
+    info(`Trying to connect to ${gateway}:${ADB_PORT}...`);
+
+    const output = await connectTcpIp(gateway, ADB_PORT);
+
+    if (/connected/i.test(output)) {
+      success(output);
+    } else {
+      warning(output || 'Could not connect over TCP/IP.');
+      console.log('Connect a device over USB with USB debugging enabled.');
+    }
+
     return;
   }
 
