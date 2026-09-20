@@ -21,14 +21,5 @@
         "tabWidth": 2
       }
     }
-  ],
-  "importOrder": [
-    "^react$",
-    "^react-dom$",
-    "<THIRD_PARTY_MODULES>",
-    "^@/",
-    "^\\.\\./",
-    "^\\./"
-  ],
-  "importOrderTypeScriptVersion": "5.0.0"
+  ]
 }
