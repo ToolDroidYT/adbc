@@ -87,11 +87,12 @@ npm run typecheck  # Type-check without emitting
 
 The CI runs on every push and pull request to `main`:
 
-1. `typecheck` — TypeScript type checking
-2. `lint` — ESLint analysis
-3. `format:check` — Prettier formatting verification
-4. `build` — Compilation and minification
-5. `test` — Unit tests
+1. `typecheck` - TypeScript type checking
+2. `lint` - ESLint analysis
+3. `format:check` - Prettier formatting verification
+4. `build` - Compilation and minification
+5. `test` - Unit tests
+6. Upload `dist/` as a build artifact
 
 ## Contributing
 
