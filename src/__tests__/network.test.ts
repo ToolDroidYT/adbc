@@ -54,39 +54,59 @@ describe('getDefaultGateway', () => {
             expect(gateway).toBe('192.168.1.1');
         });
 
-        it('throws when no default route exists', async () => {
-            mockRunCommand.mockResolvedValue({
-                stdout: '192.168.1.0/24 dev eth0 proto kernel scope link\n',
-                stderr: '',
-                exitCode: 0,
-            });
+        it('falls back to /proc/net/route when ip route has no default', async () => {
+            mockRunCommand
+                .mockResolvedValueOnce({
+                    stdout: '192.168.1.0/24 dev eth0 proto kernel scope link\n',
+                    stderr: '',
+                    exitCode: 0,
+                })
+                .mockResolvedValueOnce({
+                    stdout:
+                        'Iface\tDestination\tGateway\t\tFlags\tRefCnt\tUse\tMetric\tMask\t\tMTU\tWindow\tIRTT\n' +
+                        'eth0\t00000000\t0101A8C0\t0003\t0\t0\t100\t00000000\t0\t0\t0\n',
+                    stderr: '',
+                    exitCode: 0,
+                });
 
-            await expect(getDefaultGateway()).rejects.toThrow(
-                'No default gateway found',
-            );
+            const gateway = await getDefaultGateway();
+            expect(gateway).toBe('192.168.1.1');
         });
 
-        it('throws when ip route fails', async () => {
-            mockRunCommand.mockResolvedValue({
-                stdout: '',
-                stderr: 'RTNETLINK answers: No such process',
-                exitCode: 2,
-            });
+        it('falls back to netstat when ip route and /proc/net/route fail', async () => {
+            mockRunCommand
+                .mockResolvedValueOnce({
+                    stdout: '',
+                    stderr: 'RTNETLINK answers: No such process',
+                    exitCode: 2,
+                })
+                .mockResolvedValueOnce({
+                    stdout: '',
+                    stderr: '',
+                    exitCode: 1,
+                })
+                .mockResolvedValueOnce({
+                    stdout:
+                        'Kernel IP routing table\n' +
+                        'Destination\tGateway\t\tGenmask\t\tFlags\tMSS\tWindow\tirtt\tIface\n' +
+                        '0.0.0.0\t\t192.168.1.1\t0.0.0.0\t\tUG\t0\t0\t0\teth0\n',
+                    stderr: '',
+                    exitCode: 0,
+                });
 
-            await expect(getDefaultGateway()).rejects.toThrow(
-                'RTNETLINK answers: No such process',
-            );
+            const gateway = await getDefaultGateway();
+            expect(gateway).toBe('192.168.1.1');
         });
 
-        it('throws on empty output', async () => {
+        it('throws when all methods fail', async () => {
             mockRunCommand.mockResolvedValue({
                 stdout: '',
-                stderr: '',
-                exitCode: 0,
+                stderr: 'Failed to determine the default gateway.',
+                exitCode: 1,
             });
 
             await expect(getDefaultGateway()).rejects.toThrow(
-                'No default gateway found',
+                'Failed to determine the default gateway.',
             );
         });
     });
@@ -107,15 +127,59 @@ describe('getDefaultGateway', () => {
             expect(gateway).toBe('192.168.1.1');
         });
 
-        it('throws when no default route exists', async () => {
+        it('falls back to /proc/net/route when ip route is empty', async () => {
+            mockRunCommand
+                .mockResolvedValueOnce({
+                    stdout: '',
+                    stderr: '',
+                    exitCode: 0,
+                })
+                .mockResolvedValueOnce({
+                    stdout:
+                        'Iface\tDestination\tGateway\t\tFlags\tRefCnt\tUse\tMetric\tMask\t\tMTU\tWindow\tIRTT\n' +
+                        'wlan0\t00000000\t0101A8C0\t0003\t0\t0\t100\t00000000\t0\t0\t0\n',
+                    stderr: '',
+                    exitCode: 0,
+                });
+
+            const gateway = await getDefaultGateway();
+            expect(gateway).toBe('192.168.1.1');
+        });
+
+        it('falls back to netstat when ip route and /proc/net/route fail', async () => {
+            mockRunCommand
+                .mockResolvedValueOnce({
+                    stdout: '',
+                    stderr: '',
+                    exitCode: 0,
+                })
+                .mockResolvedValueOnce({
+                    stdout: '',
+                    stderr: '',
+                    exitCode: 1,
+                })
+                .mockResolvedValueOnce({
+                    stdout:
+                        'Kernel IP routing table\n' +
+                        'Destination\tGateway\t\tGenmask\t\tFlags\tMSS\tWindow\tirtt\tIface\n' +
+                        '0.0.0.0\t\t192.168.1.1\t0.0.0.0\t\tUG\t0\t0\t0\twlan0\n',
+                    stderr: '',
+                    exitCode: 0,
+                });
+
+            const gateway = await getDefaultGateway();
+            expect(gateway).toBe('192.168.1.1');
+        });
+
+        it('throws when all methods fail', async () => {
             mockRunCommand.mockResolvedValue({
                 stdout: '',
-                stderr: '',
-                exitCode: 0,
+                stderr: 'Failed to determine the default gateway.',
+                exitCode: 1,
             });
 
             await expect(getDefaultGateway()).rejects.toThrow(
-                'No default gateway found',
+                'Failed to determine the default gateway.',
             );
         });
     });

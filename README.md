@@ -39,12 +39,12 @@ The tool will:
 
 ## Platform Support
 
-| Platform         | Gateway detection command |
-| ---------------- | ------------------------- |
-| Linux            | `ip route show default`   |
-| Android (Termux) | `ip route show default`   |
-| macOS            | `netstat -nr`             |
-| Windows          | `ipconfig`                |
+| Platform         | Gateway detection (in order of priority)                    |
+| ---------------- | ----------------------------------------------------------- |
+| Linux            | `ip route show default` → `/proc/net/route` → `netstat -rn` |
+| Android (Termux) | `ip route show default` → `/proc/net/route` → `netstat -rn` |
+| macOS            | `netstat -nr`                                               |
+| Windows          | `ipconfig`                                                  |
 
 ## Development
 
