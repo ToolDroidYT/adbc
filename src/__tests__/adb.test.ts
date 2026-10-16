@@ -11,6 +11,7 @@ import {
     parseDevice,
     switchToTcpIp,
     connectTcpIp,
+    isConnectionFailure,
 } from '../adb.js';
 import type { AdbDevice } from '../types.js';
 
@@ -38,6 +39,12 @@ describe('ensureAdb', () => {
             stderr: 'adb: command not found',
             exitCode: 1,
         });
+
+        await expect(ensureAdb()).rejects.toThrow('ADB is unavailable');
+    });
+
+    it('throws when spawning adb fails', async () => {
+        mockRunCommand.mockRejectedValue(new Error('spawn adb ENOENT'));
 
         await expect(ensureAdb()).rejects.toThrow('ADB is unavailable');
     });
@@ -212,5 +219,49 @@ describe('connectTcpIp', () => {
         await expect(connectTcpIp('192.168.1.1', 5555)).rejects.toThrow(
             'cannot connect',
         );
+    });
+
+    it('throws when adb reports a failure with exit code 0', async () => {
+        mockRunCommand.mockResolvedValue({
+            stdout: "failed to connect to '192.168.1.1:5555': Connection refused\n",
+            stderr: '',
+            exitCode: 0,
+        });
+
+        await expect(connectTcpIp('192.168.1.1', 5555)).rejects.toThrow(
+            'Connection refused',
+        );
+    });
+});
+
+describe('isConnectionFailure', () => {
+    it('detects adb failure messages', () => {
+        expect(
+            isConnectionFailure(
+                "failed to connect to '192.168.1.1:5555': Connection refused",
+            ),
+        ).toBe(true);
+        expect(isConnectionFailure('cannot connect to 192.168.1.1:5555')).toBe(
+            true,
+        );
+        expect(
+            isConnectionFailure('unable to connect to 192.168.1.1:5555'),
+        ).toBe(true);
+        expect(
+            isConnectionFailure('failed to authenticate to 192.168.1.1'),
+        ).toBe(true);
+        expect(isConnectionFailure('no route to host')).toBe(true);
+        expect(isConnectionFailure('network is unreachable')).toBe(true);
+        expect(isConnectionFailure('connection timed out')).toBe(true);
+    });
+
+    it('does not flag successful connections', () => {
+        expect(isConnectionFailure('connected to 192.168.1.1:5555')).toBe(
+            false,
+        );
+        expect(
+            isConnectionFailure('already connected to 192.168.1.1:5555'),
+        ).toBe(false);
+        expect(isConnectionFailure('')).toBe(false);
     });
 });

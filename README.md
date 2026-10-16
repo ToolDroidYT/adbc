@@ -53,10 +53,12 @@ The tool handles two scenarios:
 | ---------------- | ------------------------------------------ |
 | Linux            | `ip route` → `/proc/net/route` → `netstat` |
 | Android (Termux) | `ip route` → `/proc/net/route` → `netstat` |
-| macOS            | `netstat -nr`                              |
-| Windows          | `ipconfig`                                 |
+| macOS            | `netstat -nr -f inet`                      |
+| Windows          | `ipconfig` → `netstat -rn`                 |
 
 Linux and Android (Termux) use a fallback chain: primary method via `ip route show default`, then `/proc/net/route` parsing, then `netstat -rn`.
+
+Detected gateways are validated as IPv4 addresses, because `adb connect` requires an IPv4 host. IPv6 default routes (for example a Windows `fe80::` gateway), `0.0.0.0` and link-local/APIPA (`169.254.x.x`) addresses are ignored.
 
 ## Architecture
 

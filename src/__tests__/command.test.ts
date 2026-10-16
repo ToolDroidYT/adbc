@@ -110,4 +110,28 @@ describe('runCommand', () => {
 
         expect(child.kill).toHaveBeenCalledWith('SIGTERM');
     });
+
+    it('does not accumulate process signal listeners across calls', async () => {
+        vi.mocked(spawn).mockImplementation(() =>
+            createMockChild('out\n', '', 0),
+        );
+
+        const first = runCommand('first');
+        await vi.advanceTimersByTimeAsync(10);
+        await first;
+
+        const sigintCount = process.listenerCount('SIGINT');
+        const sigtermCount = process.listenerCount('SIGTERM');
+
+        const second = runCommand('second');
+        await vi.advanceTimersByTimeAsync(10);
+        await second;
+
+        const third = runCommand('third');
+        await vi.advanceTimersByTimeAsync(10);
+        await third;
+
+        expect(process.listenerCount('SIGINT')).toBe(sigintCount);
+        expect(process.listenerCount('SIGTERM')).toBe(sigtermCount);
+    });
 });

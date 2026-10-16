@@ -1,13 +1,22 @@
 import { runCommand } from './command.js';
 import type { AdbDevice } from './types.js';
 
-export async function ensureAdb(): Promise<void> {
-    const result = await runCommand('adb', ['version']);
+const ADB_UNAVAILABLE_MESSAGE =
+    'ADB is unavailable. Install Android platform-tools (android-tools).';
 
-    if (result.exitCode !== 0) {
-        throw new Error(
-            'ADB is unavailable. Install Android platform-tools (android-tools).',
-        );
+export async function ensureAdb(): Promise<void> {
+    let available = false;
+
+    try {
+        const result = await runCommand('adb', ['version']);
+        available = result.exitCode === 0;
+    } catch {
+        // `spawn` rejects when adb is not in PATH.
+        available = false;
+    }
+
+    if (!available) {
+        throw new Error(ADB_UNAVAILABLE_MESSAGE);
     }
 }
 
@@ -74,6 +83,18 @@ export async function switchToTcpIp(
     }
 }
 
+const CONNECT_FAILURE_PATTERNS: readonly RegExp[] = [
+    /(?:cannot|can't|failed to|unable to) (?:connect|authenticate)/i,
+    /connection refused/i,
+    /no route to host/i,
+    /network is unreachable/i,
+    /(?:connection|operation) timed out/i,
+];
+
+export function isConnectionFailure(output: string): boolean {
+    return CONNECT_FAILURE_PATTERNS.some((pattern) => pattern.test(output));
+}
+
 export async function connectTcpIp(
     host: string,
     port: number,
@@ -89,5 +110,13 @@ export async function connectTcpIp(
         );
     }
 
-    return result.stdout.trim() || result.stderr.trim();
+    const output = result.stdout.trim() || result.stderr.trim();
+
+    // `adb connect` exits with status 0 even when the connection failed,
+    // reporting the error on stdout instead.
+    if (isConnectionFailure(output)) {
+        throw new Error(output || `Failed to connect to ${target}.`);
+    }
+
+    return output;
 }

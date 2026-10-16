@@ -23,18 +23,18 @@ async function main(): Promise<void> {
     if (devices.length === 0) {
         warning('No connected ADB devices found.');
 
-        const gateway = await getDefaultGateway();
-        info(`Trying to connect to ${gateway}:${ADB_PORT}...`);
+        try {
+            const gateway = await getDefaultGateway();
+            info(`Trying to connect to ${gateway}:${ADB_PORT}...`);
 
-        const output = await connectTcpIp(gateway, ADB_PORT);
-
-        if (/connected/i.test(output)) {
-            success(output);
-        } else {
-            warning(output || 'Could not connect over TCP/IP.');
+            const output = await connectTcpIp(gateway, ADB_PORT);
+            success(output || `Connected to ${gateway}:${ADB_PORT}`);
+        } catch (cause) {
+            warning(cause instanceof Error ? cause.message : String(cause));
             console.log(
                 'Connect a device over USB with USB debugging enabled.',
             );
+            process.exitCode = 1;
         }
 
         return;
@@ -56,12 +56,7 @@ async function main(): Promise<void> {
 
     info(`Connecting to ${gateway}:${ADB_PORT}...`);
     const output = await connectTcpIp(gateway, ADB_PORT);
-
-    if (/already connected/i.test(output)) {
-        success(output);
-    } else {
-        success(output || `Connected to ${gateway}:${ADB_PORT}`);
-    }
+    success(output || `Connected to ${gateway}:${ADB_PORT}`);
 
     console.log();
 }
